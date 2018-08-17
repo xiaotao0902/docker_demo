@@ -1,0 +1,96 @@
+## mysql
+docker run -d -p 3306:3306 --name mysql  -e MYSQL_ROOT_PASSWORD=123456 mysql:5.5
+
+## springboot
+docker run -d -p 8088:8088 --name springboot --link=mysql:mysql tongqianzhang/springboot
+
+##mongo
+docker run -d -p 27017:27017 --name mongo mongo:3.6
+
+##nodejs
+docker run -d -p 3000:3000 --name nodejs --link=mongo:mongo tongqianzhang/nodejs
+
+## kong
+
+docker run -d --name kong-database \
+              -p 5432:5432 \
+              -e "POSTGRES_USER=kong" \
+              -e "POSTGRES_DB=kong" \
+              postgres:9.6
+
+docker run --rm \
+    --link=kong-database:kong-database \
+    -e "KONG_DATABASE=postgres" \
+    -e "KONG_PG_HOST=kong-database" \
+    -e "KONG_CASSANDRA_CONTACT_POINTS=kong-database" \
+    kong:latest kong migrations up
+
+docker run -d --name kong \
+    --link=kong-database:kong-database \
+    --link=springboot:springboot \
+    --link=nodejs:nodejs \
+    -e "KONG_DATABASE=postgres" \
+    -e "KONG_PG_HOST=kong-database" \
+    -e "KONG_CASSANDRA_CONTACT_POINTS=kong-database" \
+    -e "KONG_PROXY_ACCESS_LOG=/dev/stdout" \
+    -e "KONG_ADMIN_ACCESS_LOG=/dev/stdout" \
+    -e "KONG_PROXY_ERROR_LOG=/dev/stderr" \
+    -e "KONG_ADMIN_ERROR_LOG=/dev/stderr" \
+    -e "KONG_ADMIN_LISTEN=0.0.0.0:8001, 0.0.0.0:8444 ssl" \
+    -p 8000:8000 \
+    -p 8443:8443 \
+    -p 8001:8001 \
+    -p 8444:8444 \
+    kong:latest
+
+##angular4
+
+docker run -d -p 80:80 --name nginx tongqianzhang/nginx
+
+configuration:
+/etc/nginx/nginx.conf
+#################################
+http{
+   add the configuration as below
+}
+#################################
+server {
+        listen       80;
+        server_name  localhost;
+
+        location / {
+            root /usr/share/nginx/html;
+            index index.html index.html;
+        }
+
+        error_page 404                /;
+
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   /usr/share/nginx/html;
+        }
+
+    }
+
+
+####################jenkins####################
+
+docker run -d -p 8080:8080 -p 50000:50000 --name jenkins jenkins
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

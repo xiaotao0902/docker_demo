@@ -1,0 +1,82 @@
+## setup network
+docker network create --driver bridge --subnet 172.25.0.0/16 demo_network
+
+## mysql
+docker run -d -p 3306:3306 --name mysql --net demo_network --ip 172.25.0.3 -e MYSQL_ROOT_PASSWORD=root mysql
+
+## springboot
+docker run -d -p 8080:8080 --name springboot --net demo_network --ip 172.25.0.2 tongqianzhang/springboot
+
+##mongo
+docker run -d -p 27017:27017 --name mongo --net demo_network --ip 172.25.0.4 mongo
+
+##nodejs
+docker run -d -p 3000:3000 --name nodejs --net demo_network --ip 172.25.0.7 nodejs
+
+## kong
+docker run -d --name kong-database --net demo_network --ip 172.25.0.5 -p 5432:5432 -e "POSTGRES_USER=kong" -e "POSTGRES_DB=kong" postgres:9.6
+
+docker run --rm \
+    --net demo_network\
+    -e "KONG_DATABASE=postgres" \
+    -e "KONG_PG_HOST=kong-database" \
+    -e "KONG_CASSANDRA_CONTACT_POINTS=kong-database" \
+    kong:latest kong migrations up
+
+docker run -d --name kong \
+    --net demo_network \
+    --ip 172.25.0.6\
+    -e "KONG_DATABASE=postgres" \
+    -e "KONG_PG_HOST=kong-database-ip5" \
+    -e "KONG_CASSANDRA_CONTACT_POINTS=kong-database" \
+    -e "KONG_PROXY_ACCESS_LOG=/dev/stdout" \
+    -e "KONG_ADMIN_ACCESS_LOG=/dev/stdout" \
+    -e "KONG_PROXY_ERROR_LOG=/dev/stderr" \
+    -e "KONG_ADMIN_ERROR_LOG=/dev/stderr" \
+    -e "KONG_ADMIN_LISTEN=0.0.0.0:8001, 0.0.0.0:8444 ssl" \
+    -p 8000:8000 \
+    -p 8443:8443 \
+    -p 8001:8001 \
+    -p 8444:8444 \
+    kong:latest
+
+##angular4
+
+docker run -d -p 80:80 --name angular4 --net demo_network --ip 172.18.0.8 angular4
+
+server {
+        listen       80;
+        server_name  localhost;
+
+        location / {
+            root /usr/share/nginx/html;
+            index index.html index.html;
+        }
+
+        error_page 404                /;
+
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   /usr/share/nginx/html;
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,12 @@
+FROM node:latest
+
+RUN mkdir -p /home/tony/kong/docker/nodejs
+WORKDIR /home/tony/kong/docker/nodejs
+
+COPY . /home/tony/kong/docker/nodejs
+
+RUN npm install
+
+EXPOSE 3000
+
+CMD ["npm", "start"]

@@ -1,0 +1,56 @@
+ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY '123456';
+
+CREATE TABLE `demo_schema`.`cart_t` (
+  `id` INT NOT NULL,
+  `order_id` INT NULL,
+  `product_id` INT NULL,
+  `count` VARCHAR(45) NULL,
+  `total` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`));
+
+
+CREATE TABLE `demo_schema`.`order_t` (
+  `id` INT NOT NULL,
+  `name` VARCHAR(45) NULL,
+  `total` VARCHAR(45) NULL,
+  `date` VARCHAR(45) NULL,
+  `username` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`));
+
+CREATE TABLE `demo_schema`.`product_t` (
+  `id` INT NOT NULL,
+  `name` VARCHAR(45) NULL,
+  `price` VARCHAR(45) NULL,
+  `image` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`));
+
+
+insert into `demo_schema`.`product_t` (id,name,price,image)values
+('1001','Vega','$1.19','assets/images/Botanicula_1.jpg');
+
+insert into `demo_schema`.`product_t` (id,name,price,image)values
+('1002','Earth','$1.01','assets/images/Botanicula_2.jpg');
+
+insert into `demo_schema`.`product_t` (id,name,price,image)values
+('1003','Aurora','$0.89','assets/images/Botanicula_3.jpg');
+
+insert into `demo_schema`.`product_t` (id,name,price,image)values
+('1004','Asteroid','$2.01','assets/images/Botanicula_4.jpg');
+
+insert into `demo_schema`.`product_t` (id,name,price,image)values
+('1005','Galaxyt','$1.78','assets/images/Botanicula_5.jpg');
+
+insert into `demo_schema`.`product_t` (id,name,price,image)values
+('1006','Virgo','$0.11','assets/images/Botanicula_6.jpg');
+
+insert into `demo_schema`.`product_t` (id,name,price,image)values
+('1007','Aquarius','$0.78','assets/images/Botanicula_7.jpg');
+
+insert into `demo_schema`.`product_t` (id,name,price,image)values
+('1008','Blackhole','$1.01','assets/images/Botanicula_8.jpg');
+commit;
+
+use demo
+db.items.insert({"name":"tony"})
+db.createCollection("account", { capped : true, size : 5242880, max : 5000 } )
+db.createCollection("user", { capped : true, size : 5242880, max : 5000 } )

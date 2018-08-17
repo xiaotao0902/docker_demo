@@ -1,0 +1,2 @@
+docker pull hub.c.163.com/library/mysql:latest
+docker run -d -p 3306:3306 -e MY_SQL_ROOT_PASSWORD=123456 -e MYSQL_DATABASE=demoDB hub.c.163.com/library/mysql:latest
